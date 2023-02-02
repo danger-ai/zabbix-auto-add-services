@@ -1,23 +1,15 @@
-### About me
- I am developer as hobby. For me automate boring stuff is a pleasure, no more operational work :)
- > "Live as if you were to die tomorrow. Learn as if you were to live forever" Mahatma Gandhi.
+# zabbix-auto-add-services
 
-### Donate
- if you like the project and it help you, you could give me some reward for that.
+> Zabbix Script - Create a Service for each Host/Trigger when it contains a TAG_NAME.
 
-|Donate via PayPal| Top Donation   | Lastest Donation   |
-|---|---|---|
-|[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PCTDXQTW2H59G&source=url) |  -  |  -  |
+Creating IT Services in Zabbix could be exhausting in an environment with many Hosts and Triggers.
 
+This Script allows you to manage the creation of IT Services automatically based on Triggers TAG NAME.
 
-# auto-add-services
-
-> Zabbix Script - Sync IT Service with Trigger contain a TAG_NAME.
-
-Creating IT Services in Zabbix could be exausting in an envirroment with many Hosts and Triggers.\
-This Script allow you to manage the creation of IT Services automatically based on Triggers TAG NAME.\
-The services are created hierarchically in 3 levels.\
-The first level correspond to Host Group that has Hosts with Triggers contain a certain TAG NAME . The second level correspond to Hosts that has Triggers with a certain TAG NAME. Finally, the third level is services that correspond to Triggerrs.
+The services are created hierarchically in 3 levels:\
+The first level correspond to Host Group that has Hosts with Triggers contain a certain TAG NAME . \
+The second level correspond to Hosts that has Triggers with a certain TAG NAME. \
+Finally, the third level is services that correspond to Triggers.
 The Hierarchy is like that:
 
 - HOST_GROUP_NAME |GroupID=#ID|
@@ -30,11 +22,11 @@ The Hierarchy is like that:
 
 The script scan all HOST_GROUP defined in config file then scan all host that has certain trigger with certain TAG_NAME.\
 These triggers that have a TAG_NAME will be added to calculate the SLA. 
-So the TAG_NAME has to be add in trigger, example:
+So the TAG_NAME needs to be added to a trigger. For example:
 
 ![Trigger_Sample](/trigger_tag.png)\
-The above trigger was configurated to has "SLA" TAG_NAME, also is needed to configure in auto-add-services the variable TAG_NAME as "SLA"\
-After execute the script the IT Services will be like that:
+The above trigger was configured to have "SLA" TAG_NAME. Also, what is needed is to configure the variable TAG_NAME as "SLA"\
+After execute the script the Services will be like this:
 
 ![Hierarchy_sample](/hierarquia.png)
 
@@ -45,21 +37,19 @@ After execute the script the IT Services will be like that:
 
 ## Installation
 ```
-yum install rpm-python-4.11.3-35.el7.x86_64
-yum install python2-pip-8.1.2-8.el7.noarch
 pip install zabbix-api
-git clone https://github.com/dboc/auto-add-services.git ./somedirectory
+git clone https://github.com/danger-ai/zabbix-auto-add-services.git ./somedirectory
 ```
 ## Config
 
-The config file has two collumns separated with ";" and its mandatory.\
+The config file has two semicolon-delimited columns (";"). This is required.\
 The first column is the name of group host.\
 The second is the algorithm used to calc SLA, possible values are:\
  0 - do not calculate;\
  1 - problem, if at least one child has a problem;\
  2 - problem, if all children have problems.
 
-Example of config file:
+Example of the config file:
 ```
 GROUP_NAME_A;1
 GROUP_NAME_B;1
@@ -80,21 +70,14 @@ PASSWORD = "your_pass"
 TAG_NAME = "SLA"
 ```
 
-After that you could execute the script
+After this you can execute the script:
 
 ```
 ./somedirectory/auto-add-services.py
 ```
 
 ## Release History
-
+* 0.2
+    * Child Services for each host are only added if there is more than one Trigger associated. PEP Conformity fixes.
 * 0.1
     * Initial code
-
-## Contributing
-
-1. Fork it (<https://github.com/dboc/auto-add-services/fork>)
-2. Create your feature branch (`git checkout -b feature/fooBar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new Pull Request
